@@ -1,0 +1,115 @@
+<html>
+<head>
+ 
+   <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     <link rel="stylesheet" href="css/index_style.css">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+</head>
+ 
+<body>
+    <div>
+        <nav class="navbar navbar-default ">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="welcome.html">
+                        <img src="images/flight_icon.png" alt="Logo" style="width:40px"/>
+                    </a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active" id = "bookingList"><a>Booking List</a></li>
+                    <li><a href="bookFlight.html">Book Flight</a></li>
+                    <li><a href="Privacy.html">Privacy</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="login.html"><span class="glyphicon glyphicon-user"></span>Log Out</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- <div class="jumbotron">
+            <h1> Hello, world</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, maiores at eos nam esse aliquam, voluptatum maxime perspiciatis assumenda nemo quaerat beatae minus reiciendis facilis provident reprehenderit. Fuga, enim amet!</p>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn More</a></p>
+        </div> -->
+        
+        <table class="table" id="bookingTable">
+            </table>
+      
+    </div>
+
+    <div class="container2">
+            
+
+    </div>
+
+
+<footer>
+
+</footer>
+
+</body>
+<script>
+
+// $(document).ready(function (){
+//     ShowAllEmployees()
+// })
+
+$(document).ready( function (){
+    ShowAllEmployees();
+})
+function ShowAllEmployees() {
+      //  console.log("button working 2");
+      let id = localStorage.getItem("userId");
+        $("table tbody").html("");
+        $.ajax({
+            url: "https://localhost:7286/api/IBooking",
+            type: "get",
+            headers:{
+        'Content-Type':'application/json;charset=UTF-8',
+        'Access-Control-Allow-Origin':'*',
+        'Access-Control-Allow-Method':'*'},
+            contentType: "application/json",
+            success: function (result, status, xhr) {
+
+                    var table = $("#bookingTable")
+                    var thNames   = ['Booking ID', 'User ID', 'Flight ID', 'Seat Number', 'Booking Date', 'Update', 'Delete'];
+                    var headrows = $('<tr> </tr>')
+
+                    $.each(thNames, function(index, thName) {
+                    headrows.append($("<th>" + thNames[index] + "</th>"));
+                    })
+                    table.append(headrows)
+                  $.each(result, function (index, value) {
+                    console.log(value["userId"] + "  " + id);
+                    if(value["userId"] == id){
+                        $("table tbody").append($("<tr>"));
+                    appendElement = $("tbody tr").last();
+                    appendElement.append($("<td>").html(value["bookingId"]));
+                    appendElement.append($("<td>").html(value["userId"]));
+                    appendElement.append($("<td>").html(value["flightId"]));
+                    appendElement.append($("<td>").html(value["seatNumber"]));
+                    appendElement.append($("<td>").html(value["bookingDate"]));
+                    appendElement.append($("<td>").html(value["city"]));
+                    appendElement.append($("<td>").html("<a class =" + "'btn btn-info update'" + "href=\"update.html?id=" + value["bookingId"] + "\">Update</a>"));
+                    appendElement.append($("<td>").html("<a class =" + "'btn btn-danger deleteId'" + "href=\"delete.html?id=" + value["bookingId"] + "\">Delete</a>"));
+                    }
+                });
+                
+            },
+            error: function (xhr, status, error) {
+                console.log("command failed");
+                console.log(xhr)
+            }
+        });
+    }
+</script>
+</html>
